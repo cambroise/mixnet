@@ -1,0 +1,18 @@
+CLAUDE.md
+
+# R build artifacts
+*.o
+*.so
+*.dll
+*.Rcheck/
+*.tar.gz
+src/symbols.rds
+src/Makevars.win
+
+# R session
+.Rhistory
+.RData
+.Rproj.user/
+
+# macOS
+.DS_Store

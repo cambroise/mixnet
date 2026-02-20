@@ -1,0 +1,6 @@
+^CLAUDE\.md$
+^README\.md$
+^\.gitignore$
+^\.Rbuildignore$
+^.*\.Rcheck$
+^\.claude$

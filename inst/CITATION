@@ -1,0 +1,24 @@
+## -*- R -*-
+citHeader("To cite the R package 'mixnet' in publications use:")
+
+bibentry(
+  bibtype  = "Unpublished",
+  title    = "Random graph clustering via Erdos-Renyi Mixture",
+  author   = c(
+    person("Christophe", "Ambroise",
+           email = "christophe.ambroise@univ-evry.fr"),
+    person("Mark", "Hoebeke",
+           email = "Mark.Hoebeke@jouy.inra.fr"),
+    person("Vincent", "Miele",
+           email = "miele@biomserv.univ-lyon1.fr"),
+    person("Hugo", "Zanghi",
+           email = "hugo.zanghi@exalead.com")
+  ),
+  year     = "2008",
+  note     = "Unpublished manuscript",
+  textVersion = paste(
+    "Ambroise, C., Hoebeke, M., Miele, V. and Zanghi, H. (2008)",
+    "Random graph clustering via Erdos-Renyi Mixture.",
+    "Unpublished."
+  )
+)

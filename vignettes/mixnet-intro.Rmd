@@ -1,0 +1,110 @@
+---
+title: "Introduction to mixnet: Random Graph Clustering via Erdos-Renyi Mixture"
+author: "Christophe Ambroise, Mark Hoebeke, Vincent Miele, Hugo Zanghi"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to mixnet}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 4
+)
+```
+
+## Overview
+
+**mixnet** fits the Erdos-Renyi Mixture for Graphs (ERMG) model, a probabilistic framework for
+discovering community structure in networks. Each pair of nodes belongs independently to latent
+classes, and the probability of an edge depends only on the class membership of the two endpoints.
+
+The model is estimated by a variational EM algorithm (Daudin et al., 2008) or a classification EM
+variant (Zanghi et al., 2008). Model selection (number of classes *Q*) is performed via the
+Integrated Classification Likelihood (ICL) criterion.
+
+## Installation
+
+```r
+# From CRAN (once accepted):
+install.packages("mixnet")
+
+# Development version from GitHub:
+# install.packages("remotes")
+remotes::install_github("cambroise/mixnet")
+```
+
+## Simulated data: affiliation graph
+
+The function `graph.affiliation()` generates a random graph from the ERMG model. Here we simulate
+100 nodes split evenly into 3 classes, with within-class edge probability 0.8 and between-class
+probability 0.2.
+
+```{r simulate}
+library(mixnet)
+set.seed(42)
+g <- graph.affiliation(n = 100, c(1/3, 1/3, 1/3), 0.8, 0.2)
+```
+
+The output is a list with:
+
+- `$x` — the *n × n* adjacency matrix
+- `$cluster` — the true class labels
+
+```{r inspect}
+dim(g$x)
+table(g$cluster)
+```
+
+## Fitting the ERMG model
+
+`mixnet()` explores a range of class numbers *Q* from `qmin` to `qmax` and returns results for
+each value. Model selection is automatic via ICL.
+
+```{r fit, results='hide'}
+xout <- mixnet(g$x, qmin = 2, qmax = 6)
+```
+
+## Visualisation
+
+`plot()` displays two panels: the ICL profile (left) and the adjacency matrix reorganised by
+estimated class (right). The selected *Q* is indicated on the ICL plot.
+
+```{r plot, fig.cap="Left: ICL criterion. Right: reordered adjacency matrix."}
+plot(xout)
+```
+
+## Real data: French political blogosphere
+
+The `blog` dataset is a snapshot of 196 French political blogs (October 2006) with hyperlinks
+between them. Six political communities are known a priori.
+
+```{r blog, results='hide'}
+data(blog)
+bout <- mixnet(x = blog$links, qmin = 2, qmax = 12)
+```
+
+```{r blog-plot, fig.cap="Blogosphere network clustered by mixnet."}
+plot(bout)
+```
+
+## Citation
+
+If you use **mixnet** in published work, please cite:
+
+```{r citation, comment=''}
+citation("mixnet")
+```
+
+## References
+
+Daudin, J.-J., Picard, F. and Robin, S. (2008). A mixture model for random graphs.
+*Statistics and Computing*, **18**, 173–183.
+
+Zanghi, H., Ambroise, C. and Miele, V. (2008). Fast online graph clustering via
+Erdos-Renyi mixture. *Pattern Recognition*, **41**, 3592–3599.

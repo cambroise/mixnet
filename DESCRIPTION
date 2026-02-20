@@ -1,0 +1,23 @@
+Package: mixnet
+Type: Package
+Title: Random Graph Clustering via Erdos-Renyi Mixture
+Version: 0.2.0
+Date: 2026-02-21
+Authors@R: c(
+    person("Christophe", "Ambroise",
+           email = "christophe.ambroise@univ-evry.fr",
+           role = c("aut", "cre")),
+    person("Mark", "Hoebeke",
+           email = "Mark.Hoebeke@jouy.inra.fr",
+           role = "aut"),
+    person("Vincent", "Miele",
+           role = "aut"),
+    person("Hugo", "Zanghi",
+           role = "aut"))
+Description: Performs the estimation of Erdos-Renyi Mixture for Graphs (ERMG),
+    a probabilistic model for random graphs with community structure.
+License: GPL (>= 2)
+Depends: R (>= 3.5.0), methods
+Imports: graphics, stats
+Suggests: knitr, rmarkdown
+VignetteBuilder: knitr
