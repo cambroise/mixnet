@@ -1,6 +1,7 @@
 # mixnet — Random Graph Clustering via Erdos-Renyi Mixture
 
 <!-- badges: start -->
+[![R-CMD-check](https://github.com/cambroise/mixnet/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/cambroise/mixnet/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 **mixnet** fits the Erdos-Renyi Mixture for Graphs (ERMG) model for discovering community
