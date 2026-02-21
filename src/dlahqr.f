@@ -100,6 +100,7 @@
 *     ..
 *     .. Local Scalars ..
       INTEGER            I, I1, I2, ITN, ITS, J, K, L, M, NH, NR, NZ
+      DATA               I2 / 0 /
       DOUBLE PRECISION   CS, H00, H10, H11, H12, H21, H22, H33, H33S,
      $                   H43H34, H44, H44S, OVFL, S, SMLNUM, SN, SUM,
      $                   T1, T2, T3, TST1, ULP, UNFL, V1, V2, V3

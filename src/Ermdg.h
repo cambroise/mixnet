@@ -1,6 +1,6 @@
 /* Ermdg.h
  *
- * Copyright (C) 2006 Laboratoire Statistique & Génome
+ * Copyright (C) 2006 Laboratoire Statistique & Genome
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 /*!
  *   \file
  *     \author Vincent Miele
- *       \brief Erdös Reni Mixture for Directed Graphs
+ *       \brief Erdos Reni Mixture for Directed Graphs
  *
  *          13/10/2006
  *          
@@ -30,7 +30,7 @@
 #define ERMG_ERMDG_H
 /*!
   \class Ermdg src/Ermdg.h
-  \brief Erdös Reni Mixture for Directed Graphs class
+  \brief Erdos Reni Mixture for Directed Graphs class
 */
 
 #include <Ermg.h>

@@ -17,8 +17,6 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <Graph.h>
-
 #include <cassert>
 #include <algorithm>
 #include <fstream>
@@ -26,6 +24,9 @@
 #include <iterator>
 #include <random>
 #include <sstream>
+
+#include <Graph.h>
+#include <R.h>
 
 using namespace std;
 
@@ -43,9 +44,7 @@ namespace ermg {
     //res.resize(_linkmap.size());
     res.resize(_idmap.size(), vector<int>());
     map<int,list<int> >::iterator idit=_linkmap.begin();
-    int previd = 0;
     while (idit != _linkmap.end()) {
-      previd = idit->first;
       assert(idit->second.size()>=0);
       /*
 	cerr << " Processsing " << idit->first << "\t( " << _idmap[idit->first] 
@@ -196,8 +195,7 @@ namespace ermg {
     string line;
     gstream.open(vfile.c_str());
     if (!gstream.good()){
-      cerr<<"Unable to open file "<<vfile<<endl;
-      exit(1);
+      Rf_error("Unable to open file %s", vfile.c_str());
     }
     while (!gstream.eof()) {
       getline(gstream,line); 
@@ -208,8 +206,7 @@ namespace ermg {
 	string cl;
 	linestream>>cl;
 	if (!cl.length()){
-	  cerr<<"Error: the line format \"id class\" is not respected in "<<vfile<<endl;
-	  exit(1);
+	  Rf_error("Error: the line format \"id class\" is not respected in %s", vfile.c_str());
 	}
 	int icl=atoi(cl.c_str());
 	classlabelmap[tmplabel]=icl;

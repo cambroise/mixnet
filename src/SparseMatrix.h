@@ -1,6 +1,6 @@
 /* SparseMatrix.h
  *
- * Copyright (C) 2006 Laboratoire Statistique & Génome
+ * Copyright (C) 2006 Laboratoire Statistique & Genome
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -83,7 +83,7 @@ namespace ermg {
 	  pos--;   
 	} 
 
-	int ind1=-1, ind2;
+	[[maybe_unused]] int ind1=-1, ind2;
 	for (int nbe=0; nbe<pos; nbe++){
 	  sum -= vecin[*it_l]; // -1 if connected
 	  ind2 = *it_l;

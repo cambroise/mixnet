@@ -1,7 +1,7 @@
 
 /* ModelImprover.cc
  *
- * Copyright (C) 2006 Laboratoire Statistique & Génome
+ * Copyright (C) 2006 Laboratoire Statistique & Gï¿½nome
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@
  */
 
 #include <ModelImprover.h>
+#include <R.h>
 #include <limits>
 #include <unistd.h>
 #include <time.h>
@@ -52,37 +53,33 @@ namespace ermg {
       }
       else{
 	if (!_silent)
-	  cout<<"K-means...\t"<<flush; 
+	  Rprintf("K-means...\t");
 	_curr_ermg.kmeans();
 	if (!_silent)
-	  cout<<"done"<<endl;
+	  Rprintf("done\n");
       } 
       if (!_silent)
-	cout<<"Hierarchical Clustering...\t\t"<<flush; 
+	Rprintf("Hierarchical Clustering...\t\t");
       _curr_ermg.cah();
       if (!_silent)
-	cout<<"done"<<endl;
+	Rprintf("done\n");
     }
     else{
       if (!_silent)
-	cout<<"Hierarchical Clustering ...\t\t"<<flush; 
-      _curr_ermg.cahForSubXadj( em.requiredNumberOfInitializedVertices() );      
+	Rprintf("Hierarchical Clustering ...\t\t");
+      _curr_ermg.cahForSubXadj( em.requiredNumberOfInitializedVertices() );
       if (!_silent)
-	cout<<"done"<<endl;
+	Rprintf("done\n");
     }
   
     for (int c=_qmin; c<=_qmax; c++){ 
-      if (!_silent)	
-	cout<<"\rEM for Q="<<c<< flush; 
+      if (!_silent)
+	Rprintf("\rEM for Q=%d", c);
       _curr_ermg.em( em, c );
-      _curr_ermg.saveTo( _ed_rep[c-_qmin] );      
+      _curr_ermg.saveTo( _ed_rep[c-_qmin] );
     }
     if (!_silent)
-      cout<<"\rEM for Q="
-	<<_qmin
-	<<" to "
-	<<_qmax
-	<<"...\tdone"<<endl;
+      Rprintf("\rEM for Q=%d to %d...\tdone\n", _qmin, _qmax);
   }
 
 
@@ -92,12 +89,12 @@ namespace ermg {
     for (int c=_qmin; c<=_qmax; c++){ 
       stringstream strin;
       strin<<idir<<"/"<<spmfile.substr(islash+1, spmfile.size()-4-islash-1)<<"_Q"<<c<<".model";
-      if (!_silent)	
-	cout<<"Loading "<<strin.str()<<"...\t"<< flush; 
-      _curr_ermg.inFile( strin.str() );
-      _curr_ermg.saveTo( _ed_rep[c-_qmin] );      
       if (!_silent)
-	cout<<"done"<<endl;
+	Rprintf("Loading %s...\t", strin.str().c_str());
+      _curr_ermg.inFile( strin.str() );
+      _curr_ermg.saveTo( _ed_rep[c-_qmin] );
+      if (!_silent)
+	Rprintf("done\n");
     }
   }
 
@@ -172,9 +169,9 @@ namespace ermg {
 
 
   void ModelImprover::improveLikelihoodsSpeed(EmCore& em)
-  { 
+  {
     if (!_silent)
-      cout<<"Improvement...\t"<< flush;
+      Rprintf("Improvement...\t");
     int cm = _qmax-_qmin;
     vector<int> candidate(1,0);
     int niter = 0;
@@ -185,9 +182,9 @@ namespace ermg {
       //start = clock();
       ModelImproverLog implog(_qmin, _qmax);
       if (!_silent)
-	cout<<"\rImprovement...\t"<<niter+1<<flush;
-      statuquo = true;	
-      bool mstatuquo, sstatuquo; 
+	Rprintf("\rImprovement...\t%d", niter+1);
+      statuquo = true;
+      bool mstatuquo, sstatuquo;
       int c=0;
       while(c<cm){
 	//0// envelope calculus
@@ -261,7 +258,9 @@ namespace ermg {
 	    if ( (_imove_usedtomerge[kselect+1] == _imove[kselect+1])
 		 &&(_imove_usedtosplit[kselect-1] == _imove[kselect-1]) ){
 	      //2.3// or random drawing
-	      double tmprand = double(rand())/double(RAND_MAX)*(kmax-c-2);
+	      GetRNGstate();
+	      double tmprand = unif_rand() * (kmax-c-2);
+	      PutRNGstate();
 	      int krand=1;
 	      while (krand<tmprand){
 		krand++;
@@ -313,13 +312,13 @@ namespace ermg {
     } while( (!statuquo)&&(niter<_nitermax) );    
   
     if (!_silent)
-      cout<<"\rImprovement...\tdone                          "<<endl;   
+      Rprintf("\rImprovement...\tdone                          \n");
   }
-   
+
   void ModelImprover::improveLikelihoods(EmCore& em)
-  {  
+  {
     if (!_silent)
-      cout<<"Improvement...\t"<< flush; 
+      Rprintf("Improvement...\t");
     int niter;
     bool statuquo;
     vector<int> candidate(1,0);
@@ -329,7 +328,7 @@ namespace ermg {
       //start = clock();
       ModelImproverLog implog(_qmin, _qmax);
       if (!_silent)
- 	cout<<"\rImprovement...\t"<<niter+1<<flush;
+	Rprintf("\rImprovement...\t%d", niter+1);
       statuquo = true; 
       vector<int> num_ed =  this->notConvexLikelihood(implog);
       for (vector<int>::iterator it=num_ed.begin(); it!=num_ed.end(); it++){
@@ -348,8 +347,8 @@ namespace ermg {
     } while( (!statuquo)&&(niter<_nitermax) );    
     
     if (!_silent)
-      cout<<"\rImprovement...\tdone                          "<<endl;   
-  }    
+      Rprintf("\rImprovement...\tdone                          \n");
+  }
 
   bool ModelImprover::mergeStrategy(EmCore& em, const vector<int>& num_ed, ModelImproverLog& implog)
   {
@@ -464,15 +463,15 @@ namespace ermg {
   {
     if (!_silent)
       for (int c=0; c<=_qmax-_qmin; c++)
-	cout<<"# incomplete Likelihood Approximation"<<endl
-	    <<_qmin+c<<"\t"<<_ed_rep[c].incompleteLikelihoodApproximation()<<endl;
-    cout<<endl<<endl;
+	Rprintf("# incomplete Likelihood Approximation\n%d\t%g\n",
+		_qmin+c, _ed_rep[c].incompleteLikelihoodApproximation());
+    Rprintf("\n\n");
   }
 
   void ModelImprover::outFile(const string& ofile, const Graph *g, const string& odir )
   {
     if (!_silent)
-      cout<<"Saving...\t"<< flush; 
+      Rprintf("Saving...\t");
     for (int c=0; c<=_qmax-_qmin; c++){
       _curr_ermg.loadFrom( _ed_rep[c] );
       _curr_ermg.outFile( ofile, g, odir );
@@ -504,9 +503,9 @@ namespace ermg {
       fout<<"# Q="<<_qmin+c
 	  <<" ICL:\n"<<_ed_rep[c]._icl<<endl;
     }  
-    fout.close(); 
+    fout.close();
     if (!_silent)
-      cout<<"done"<<endl; 
+      Rprintf("done\n");
   }
 
 }

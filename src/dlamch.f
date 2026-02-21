@@ -525,7 +525,8 @@
 * Comment out this if block if EMIN is ok
          IF( IWARN ) THEN
             FIRST = .TRUE.
-            WRITE( 6, FMT = 9999 )LEMIN
+*           Suppress output: this path is only for non-IEEE hardware
+*           WRITE( 6, FMT = 9999 )LEMIN
          END IF
 ***
 *

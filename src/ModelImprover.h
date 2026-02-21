@@ -1,6 +1,6 @@
 /* ModelImprover.h
  *
- * Copyright (C) 2006 Laboratoire Statistique & Génome
+ * Copyright (C) 2006 Laboratoire Statistique & Genome
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 /*!
  *   \file
  *     \author Vincent Miele
- *       \brief Erdös Reni Mixture for Graphs selection
+ *       \brief Erdos Reni Mixture for Graphs selection
  *
  *          13/10/2006
  *          
@@ -30,7 +30,7 @@
 #define ERMG_MODELIMPROVER_H
 /*!
   \class ModelImprover.h libermg/ModelImprover.h
-  \brief Erdös Reni Mixture for Graphs Selection  class
+  \brief Erdos Reni Mixture for Graphs Selection  class
 */
 
 

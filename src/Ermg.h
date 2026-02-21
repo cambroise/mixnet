@@ -1,6 +1,6 @@
 /* Ermg.h
  *
- * Copyright (C) 2006 Laboratoire Statistique & Génome
+ * Copyright (C) 2006 Laboratoire Statistique & Genome
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 /*!
  *   \file
  *     \author Vincent Miele
- *       \brief Erdös Reni Mixture for Graphs
+ *       \brief Erdos Reni Mixture for Graphs
  *
  *          13/03/2006
  *          
@@ -30,7 +30,7 @@
 #define ERMG_ERMG_H
 /*!
   \class Ermg libermg/Ermg.h
-  \brief Erdös Reni Mixture for Graphs class
+  \brief Erdos Reni Mixture for Graphs class
 */
 
 
@@ -245,10 +245,7 @@ namespace ermg {
     }
 
     //! error file message
-    void errFormatFile(){
-      std::cerr<<"Error format file"<<std::endl;
-      exit(1);
-    }
+    void errFormatFile();
 
     //! forbidden default constructor
     Ermg();

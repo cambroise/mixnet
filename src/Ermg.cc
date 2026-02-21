@@ -1,6 +1,6 @@
 /* Ermg.cc
  *
- * Copyright (C) 2006 Laboratoire Statistique & Génome
+ * Copyright (C) 2006 Laboratoire Statistique & Gï¿½nome
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
 #include <Ermg.h>
 #include <EmCore.h>
 
+#include <R.h>
 #include <cstdlib>
 #include <algorithm>
 #include <sstream>
@@ -32,6 +33,10 @@ using namespace std;
 
 
 namespace ermg {
+
+  void Ermg::errFormatFile() {
+    Rf_error("Error format file");
+  }
 
   Ermg::Ermg( const vector< vector<int> >& spm,  
 	      bool enable_loop, 
@@ -190,8 +195,7 @@ namespace ermg {
   void Ermg::merge()
   {
     if (_q<3){
-      cerr<<"Merge impossible with only "<<_q<<" classes"<<endl;
-      exit(1);
+      Rf_error("Merge impossible with only %d classes", _q);
     }   
     _kmeans_nbclass = _q; 
   
@@ -204,7 +208,7 @@ namespace ermg {
       this->cah();
     }
     else{
-      cerr<<"Merge warning: a single class assigned for all the vertices"<<endl;
+      REprintf("Merge warning: a single class assigned for all the vertices\n");
       _save_class.clear();
       _class.assign(_n,0);
       _save_class.push_back(_class);
@@ -305,7 +309,7 @@ namespace ermg {
   void Ermg::kmeansCore()
   {  
     int niter = 0;
-    double entropy;
+    [[maybe_unused]] double entropy;
   
     this->kmeansInitializeBarycenters();
 
@@ -385,9 +389,11 @@ namespace ermg {
   
     // in case of ex-aequo
     if (exaequo_min.size()>0){
-      exaequo_min.push_back(min_c);    
+      exaequo_min.push_back(min_c);
       int nbexaequo = exaequo_min.size();
-      double tmprand = double(rand())/double(RAND_MAX)*nbexaequo;
+      GetRNGstate();
+      double tmprand = unif_rand() * nbexaequo;
+      PutRNGstate();
       int c=1;
       while (c<tmprand){
 	c++;
@@ -436,10 +442,12 @@ namespace ermg {
   {
     double tmpcoeff;
     double step = double(_kmeans_concerned_vertices.size())/double(_kmeans_nbclass);
+    GetRNGstate();
     for (int c=0; c<_kmeans_nbclass; c++){
-      tmpcoeff = double(rand())/double(RAND_MAX);
+      tmpcoeff = unif_rand();
       selected[c] = _kmeans_concerned_vertices[ int( (c+tmpcoeff)*step ) ];
     }
+    PutRNGstate();
 #ifdef VERBOSE      
     cerr<<"Vertices selected: ";
     for (int c=0; c<_kmeans_nbclass; c++)
@@ -563,8 +571,7 @@ namespace ermg {
     vector<int> aux(_n, -1);
     int m = *max_element(inputclass.begin(), inputclass.end());
     if ( m>(_cah_minnbclass-1) ){
-      cerr<<"Error: in input class file, the classes goes from 0 to "<<m<<"  >= "<<_cah_minnbclass<<" classes"<<endl;
-      exit(1);
+      Rf_error("Error: in input class file, the classes go from 0 to %d >= %d classes", m, _cah_minnbclass);
     }
     copy(inputclass.begin(), inputclass.end(), aux.begin());
     _save_class.push_back(aux);
@@ -579,7 +586,7 @@ namespace ermg {
       double min_score = INF;
       int min_c1=0, min_c2=0;
     
-      int nbexaequo=0;
+      [[maybe_unused]] int nbexaequo=0;
       vector<int> exaequo_min;
 
       _it_card_c1 = _cardinal_class.begin();
@@ -624,13 +631,15 @@ namespace ermg {
 
       // if a single class 
       if ((min_c1==0) && (min_c2==0)){
-	cerr<<"Hierarchical Clustering warning: a single class assigned for all the vertices"<<endl;
+	REprintf("Hierarchical Clustering warning: a single class assigned for all the vertices\n");
 	this->cahSingleClass();
       }
       else{
 	// in case of ex-aequo
 	if (exaequo_min.size()>1){
-	  double tmprand = double(rand())/double(RAND_MAX)*(exaequo_min.size()/2);
+	  GetRNGstate();
+	  double tmprand = unif_rand() * (exaequo_min.size()/2);
+	  PutRNGstate();
 	  int c=1;
 	  while (c<tmprand){
 	    c++;
@@ -975,8 +984,7 @@ void Ermg::inFile(const std::string& ifile)
   std::ifstream fin;
   fin.open(ifile.c_str(), std::ios::in);
   if (!fin.is_open()){
-    std::cerr<<"Unable to open "<<ifile.c_str()<<std::endl;
-    exit(1);
+    Rf_error("Unable to open %s", ifile.c_str());
   }
   fin>>*this;
   fin.close();

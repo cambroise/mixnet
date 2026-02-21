@@ -69,6 +69,7 @@
 *     .. Local Scalars ..
       INTEGER            I, J
       DOUBLE PRECISION   SCALE, SUM, VALUE
+      DATA               VALUE / 0.0D0 /
 *     ..
 *     .. External Subroutines ..
       EXTERNAL           DLASSQ

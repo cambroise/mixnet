@@ -6,6 +6,7 @@ c\SCCS Information: @(#)
 c FILE: stat.h   SID: 2.2   DATE OF SID: 11/16/95   RELEASE: 2 
 c
       real       t0, t1, t2, t3, t4, t5
+      data       t0, t1, t2, t3, t4, t5 /6*0.0/
       save       t0, t1, t2, t3, t4, t5
 c
       integer    nopx, nbx, nrorth, nitref, nrstrt

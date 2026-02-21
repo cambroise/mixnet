@@ -1,6 +1,6 @@
 /* ModelDesigner.h
  *
- * Copyright (C) 2006 Laboratoire Statistique & Génome
+ * Copyright (C) 2006 Laboratoire Statistique & Genome
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 /*!
  *   \file
  *     \author Vincent Miele
- *       \brief Erdös Reni Mixture for Graphs design
+ *       \brief Erdos Reni Mixture for Graphs design
  *
  *          13/10/2006
  *          
@@ -30,7 +30,7 @@
 #define ERMG_MODELDESIGNER_H
 /*!
   \class ModelDesigner.h libermg/ModelDesigner.h
-  \brief Erdös Reni Mixture for Graphs design  class
+  \brief Erdos Reni Mixture for Graphs design  class
 */
 
 

@@ -154,6 +154,8 @@ c     %-------------------------------%
 c 
       call second (t0)
       msglvl = mngets
+c     Reference legacy dummy args (unused in this implementation)
+      if (ishift .lt. -9999) t0 = shiftr(1) + shifti(1)
 c 
 c     %----------------------------------------------------%
 c     | LM, SM, LR, SR, LI, SI case.                       |

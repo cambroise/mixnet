@@ -1,6 +1,6 @@
 /* SOCEm.cc
  *
- * Copyright (C) 2006 Laboratoire Statistique & Génome
+ * Copyright (C) 2006 Laboratoire Statistique & Genome
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
 
 #include <limits>
 #include <SOCEm.h>
+#include <R.h>
 
 using namespace std;
 namespace ermg {
@@ -56,9 +57,11 @@ namespace ermg {
       }
     }
       
-    // drawing    
+    // drawing
     int qstar = 0;
-    double c=_sumsTau_qi[0], tmprand = double(rand())/double(RAND_MAX), bound=tmprand*sumval;
+    GetRNGstate();
+    double c=_sumsTau_qi[0], tmprand = unif_rand(), bound=tmprand*sumval;
+    PutRNGstate();
     while (c<bound){
       qstar++;
       c+=_sumsTau_qi[qstar];

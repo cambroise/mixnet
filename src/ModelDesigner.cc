@@ -1,6 +1,6 @@
 /* ModelDesigner.cc
  *
- * Copyright (C) 2006 Laboratoire Statistique & Génome
+ * Copyright (C) 2006 Laboratoire Statistique & Gï¿½nome
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@
  */
 
 #include <ModelDesigner.h>
+#include <R.h>
 using namespace std;
 
 
@@ -34,19 +35,21 @@ namespace ermg {
   void ModelDesigner::load(const vector<int>& inputclasses)
   {    	      
     if (!_silent)
-      cout<<"Initializing classes...\t"<< flush; 
-    _curr_ermg.replaceCahForSubXadjByLoad(inputclasses);      
+      Rprintf("Initializing classes...\t");
+    _curr_ermg.replaceCahForSubXadjByLoad(inputclasses);
     if (!_silent)
-      cout<<"done"<<endl;
+      Rprintf("done\n");
   }
   
   void ModelDesigner::initialRandom(int n_init)
   {   	      
     if (!_silent)
-      cout<<"Random "<< flush;
+      Rprintf("Random ");
     vector<int> randomclasses(_curr_ermg.nbVertices(), -1);
+    GetRNGstate();
     for (int i=0; i<n_init; i++)
-      randomclasses[i] = int(double(rand())/double(RAND_MAX)*_q);
+      randomclasses[i] = int(unif_rand() * _q);
+    PutRNGstate();
       
     load(randomclasses);
   }
@@ -54,16 +57,16 @@ namespace ermg {
   void ModelDesigner::em(EmCore& em)
   {      
     if (!_silent)
-      cout<<"\rEM for Q="<<_q<<"...\t"<< flush;
-    _curr_ermg.em(em, _q);      
+      Rprintf("\rEM for Q=%d...\t", _q);
+    _curr_ermg.em(em, _q);
     if (!_silent)
-      cout<<"done"<<endl;
+      Rprintf("done\n");
   }
   
   void ModelDesigner::outFile(const string& ofile, const Graph *g, const string& odir )
   {
     if (!_silent)
-      cout<<"Saving...\t"<< flush; 
+      Rprintf("Saving...\t");
       _curr_ermg.outFile( ofile, g, odir );
       
     stringstream strout;
@@ -86,7 +89,7 @@ namespace ermg {
 	<<" ICL:\n"<<_curr_ermg.ICL()<<endl;    
     fout.close(); 
     if (!_silent)
-      cout<<"done"<<endl; 
+      Rprintf("done\n");
   }
 
 

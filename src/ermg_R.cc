@@ -23,17 +23,13 @@
 #endif
 
 #include <sstream>
-using namespace std;
-
-
-#include <stdlib.h>
-#include <sys/types.h>
-#include <unistd.h>
 #include <ModelImprover.h>
 #include <Emd.h>
 #include <GraphReader.h>
 
+#include <R.h>
 
+using namespace std;
 using namespace ermg;
 
 extern "C" {
@@ -58,8 +54,6 @@ extern "C" {
 		 int*    m,	// the list of edges
 		 double* res){
     
-    srand((long)getpid());
-    
     // GRAPH
     bool tosym = *symmetrize;
     if (*undirected){
@@ -67,28 +61,27 @@ extern "C" {
     }
     GraphReader gr(tosym, *loop);
     if (!(*silent))
-      printf("Loading graph...\t");
+      Rprintf("Loading graph...\t");
     
 
     // loading graph from *m
     // need to convert int to string
     char buf1[50];
     char buf2[50];
-    int i,n;
-    
+    int i;
+
     try {
       Graph *graph=gr.getGraph();
       for (i=0; i<*nbrEdges*2; i += 2){
-	n=snprintf(buf1, sizeof(buf1), "%d", m[i]);
-	n=snprintf(buf2, sizeof(buf2), "%d", m[i+1]);
+	snprintf(buf1, sizeof(buf1), "%d", m[i]);
+	snprintf(buf2, sizeof(buf2), "%d", m[i+1]);
 	graph->addLink(buf1, buf2);
       }
       if (!(*silent))
-	printf("done");
-      
+	Rprintf("done");
+
       if (graph->nbVertices() < *qmax){
-	printf("Error: Q max is greater than (then set to) the number of vertices");
-       	exit(0);
+	Rf_error("Q max is greater than the number of vertices");
       }    
       
       
@@ -134,9 +127,6 @@ extern "C" {
       
       
       double icl ;
-      std::vector<double>::iterator it_Alpha ;
-      BandMemMatrix<double>::BandCursor it_Pi ;
-      BandMemMatrix<double>::BandCursor it_t_Tau ;
 
       int q=0;
       int i=0;
@@ -168,7 +158,7 @@ extern "C" {
            delete em_method;
       
     } catch (GraphReaderException &gre) {
-      printf("Exception : %s\n",gre.what());
+      Rf_error("Exception : %s", gre.what());
     }
   }
 }

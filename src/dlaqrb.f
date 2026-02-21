@@ -139,6 +139,7 @@ c     | Local Scalars & Arrays |
 c     %------------------------%
 c
       integer    i, i1, i2, itn, its, j, k, l, m, nh, nr
+      data       i2 / 0 /
       Double precision
      &           cs, h00, h10, h11, h12, h21, h22, h33, h33s,
      &           h43h34, h44, h44s, ovfl, s, smlnum, sn, sum,

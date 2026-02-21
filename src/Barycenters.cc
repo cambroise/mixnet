@@ -1,6 +1,6 @@
 /* Barycenters.cc
  *
- * Copyright (C) 2006 Laboratoire Statistique & Génome
+ * Copyright (C) 2006 Laboratoire Statistique & Genome
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -88,7 +88,7 @@ namespace ermg {
   void Barycenters::initFromClass( const vector<int>& cl,
                                    const vector<int>& cardinal_class )
   {
-    int s, ind1, ind2;
+    int s, ind2;
 
     _G2->fill( 0. );
     for (int i=0; i<_n; i++){
@@ -96,7 +96,6 @@ namespace ermg {
 
       if (s>0){
         _it_Xadj_i = _Xadj[i].begin();
-        ind1=-1;
         for (int nbe=0; nbe<s; nbe++){
           ind2 = *_it_Xadj_i;
 
@@ -105,7 +104,6 @@ namespace ermg {
 
           // non null element j=ind2
           (*_G2).value(cl[i], ind2) += 1;
-          ind1 = ind2;
           _it_Xadj_i++;
 
           // last null elements
@@ -119,12 +117,11 @@ namespace ermg {
 
   void Barycenters::kmeansUpdate(int i, int min_c)
   {
-    int s = _Xadj[i].size(), ind1, ind2;
+    int s = _Xadj[i].size(), ind2;
 
     if (s>0){
       _it_Xadj_i = _Xadj[i].begin();
-      ind1=0; 
-    
+
       for (int nbe=0; nbe<s; nbe++){
 	ind2 = *_it_Xadj_i;
 	// non null element j=ind2

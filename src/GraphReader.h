@@ -1,6 +1,6 @@
 /* GraphReader.h
  *
- * Copyright (C) 2006 Laboratoire Statistique & Génome
+ * Copyright (C) 2006 Laboratoire Statistique & Genome
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -87,7 +87,7 @@ namespace ermg {
       GraphReaderException(const std::string &s) : 
       std::exception(), _msg(s) {};
     virtual ~GraphReaderException() throw() {} ;
-    virtual const char * what() throw() { return _msg.c_str(); } ;
+    virtual const char * what() const throw() { return _msg.c_str(); } ;
     private :
       std::string _msg;
   }; 

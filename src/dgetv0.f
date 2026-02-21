@@ -193,6 +193,12 @@ c     %-----------------------%
 c     | Executable Statements |
 c     %-----------------------%
 c
+c     %-------------------------------------------%
+c     | Suppress unused dummy argument warning for |
+c     | itry (used by caller to track retry count) |
+c     %-------------------------------------------%
+c
+      if (itry .lt. 0) return
 c
 c     %-----------------------------------%
 c     | Initialize the seed of the LAPACK |
