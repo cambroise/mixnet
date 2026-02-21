@@ -39,9 +39,9 @@ mixnet<-function(x,qmin=2,qmax=NULL,method="variationnal",nbiter=10,improve=FALS
 
   ## ensure the options compatibility
   if  (method=="classification") {
-    classif<-TRUE; stochastique<-FALSE; online<-TRUE}
+    classif<-TRUE; stochastique<-FALSE}
   else    {
-    stochastique<-FALSE; classif<-FALSE; online<-FALSE}
+    stochastique<-FALSE; classif<-FALSE}
 
 
   if (undirected==TRUE){
@@ -197,10 +197,9 @@ plotmixture<-function(degrees,Pis,alphas,n){
 ############################################################
 is.mixnet<-function(x){inherits(x, "mixnet")}
 
-plot.mixnet<-function(x,q=NULL,...){  
+plot.mixnet<-function(x,q=NULL,...){
 x->mixnet.res
 par(mfrow=c(1,2))
-n<-dim(mixnet.res$x)[1]
 if (!is.mixnet(mixnet.res)) stop("Not a mixnet object")
  
 if (is.null(q)) {# find the best number of classes according ICL
@@ -210,8 +209,6 @@ if (is.null(q)) {# find the best number of classes according ICL
                   }
 
 apply(mixnet.res$output[[q-mixnet.res$qmin+1]]$Taus,2,which.max)->cluster
-Pis<-mixnet.res$output[[q-mixnet.res$qmin+1]]$Pis
-alphas<-mixnet.res$output[[q-mixnet.res$qmin+1]]$alphas
 
 ploticl(mixnet.res,q)
 plotam(mixnet.res$edges,cluster)
@@ -271,7 +268,7 @@ spectralkmeans<-function(x,q=2){
   D<-colSums(x)
   L<-diag(rep(1,n)) -  diag(D^(-1/2))%*% x %*% diag(D^(-1/2))
   eigen(L)->D
-  kmeans(as.matrix(D$vectors[,max(1,(n-q)): (n-1)]),q)->res         
+  return(kmeans(as.matrix(D$vectors[,max(1,(n-q)):(n-1)]),q))
 }
 
 ##############################################################
@@ -309,7 +306,6 @@ AdjMat2Edges<-function(x)
               x<-x[-aloof,-aloof]
               warning("Some nodes are not connected to the network",call. = FALSE)
             }
-        nbrNodes<-dim(x)[1]
         m<-t(which((x==1) & (upper.tri(x)),arr.ind=TRUE))
       }
     return(m)

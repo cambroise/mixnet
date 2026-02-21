@@ -21,7 +21,6 @@ parseline.spmgraph<-function(line,initenv) {
 		src=fields[1]
 		dest=fields[2:length(fields)]
 		g=get("instance",envir=initenv)
-		nextindex=length(g@nodeindexes)+1	
 		srcindex=which(g@nodenames==src)
 		if (length(srcindex)==0) {
 			srcindex=length(g@nodenames)+1
@@ -108,7 +107,7 @@ setMethod("getEdges",
 		edgelist=c(g@edgesrcs,g@edgedests)
 		if (withlabels==TRUE)
 			edgelist=lapply(edgelist,'indextolabel.spmgraph',g)
-		matrix(edgelist,nrow=2,byrow=T)
+		matrix(edgelist,nrow=2,byrow=TRUE)
 	})
 
 setGeneric("getAdjacencyMatrix",function(g,...) { standardGeneric("getAdjacencyMatrix")})

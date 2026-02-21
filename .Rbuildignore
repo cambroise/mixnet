@@ -5,3 +5,4 @@
 ^\.Rbuildignore$
 ^.*\.Rcheck$
 ^\.claude$
+^memory$
