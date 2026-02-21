@@ -41,7 +41,13 @@ jobs:
           extra-packages: any::rcmdcheck
           needs: check
 
-      - name: Run R CMD check and show full log
+      - name: Show compiler versions
+        run: |
+          R --version | head -1
+          gfortran --version | head -1 || true
+          clang --version | head -1 || true
+
+      - name: Run R CMD check
         shell: Rscript {0}
         run: |
           result <- rcmdcheck::rcmdcheck(
@@ -49,13 +55,28 @@ jobs:
             build_args = "--no-manual",
             error_on = "never"
           )
-          cat("\n===== WARNINGS =====\n")
-          cat(paste(result$warnings, collapse="\n---\n"))
-          cat("\n===== NOTES =====\n")
-          cat(paste(result$notes, collapse="\n---\n"))
+          summary_file <- Sys.getenv("GITHUB_STEP_SUMMARY")
+          if (nzchar(summary_file)) {
+            writeLines(c(
+              "## R CMD Check Results",
+              sprintf("**Errors:** %d | **Warnings:** %d | **Notes:** %d",
+                      length(result$errors), length(result$warnings), length(result$notes)),
+              "",
+              "### Warnings",
+              if (length(result$warnings) == 0) "_none_" else
+                paste0("```\n", paste(result$warnings, collapse="\n---\n"), "\n```"),
+              "",
+              "### Notes",
+              if (length(result$notes) == 0) "_none_" else
+                paste0("```\n", paste(result$notes, collapse="\n---\n"), "\n```")
+            ), summary_file)
+          }
+          cat("\n===== ERRORS =====\n", paste(result$errors, collapse="\n"), "\n")
+          cat("\n===== WARNINGS =====\n", paste(result$warnings, collapse="\n"), "\n")
+          cat("\n===== NOTES =====\n", paste(result$notes, collapse="\n"), "\n")
           cat("\n===== STATUS =====\n")
           cat(sprintf("Errors: %d, Warnings: %d, Notes: %d\n",
                       length(result$errors), length(result$warnings), length(result$notes)))
-          if (length(result$warnings) > 0 || length(result$errors) > 0) {
+          if (length(result$errors) > 0 || length(result$warnings) > 0) {
             quit(status = 1)
           }
