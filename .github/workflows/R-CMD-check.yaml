@@ -41,10 +41,21 @@ jobs:
           extra-packages: any::rcmdcheck
           needs: check
 
-      - uses: r-lib/actions/check-r-package@v2
-        with:
-          upload-snapshots: true
-          upload-results: true
-          args: 'c("--no-manual", "--as-cran")'
-          build_args: 'c("--no-manual")'
-          error_on: '"warning"'
+      - name: Run R CMD check and show full log
+        shell: Rscript {0}
+        run: |
+          result <- rcmdcheck::rcmdcheck(
+            args = c("--no-manual", "--as-cran"),
+            build_args = "--no-manual",
+            error_on = "never"
+          )
+          cat("\n===== WARNINGS =====\n")
+          cat(paste(result$warnings, collapse="\n---\n"))
+          cat("\n===== NOTES =====\n")
+          cat(paste(result$notes, collapse="\n---\n"))
+          cat("\n===== STATUS =====\n")
+          cat(sprintf("Errors: %d, Warnings: %d, Notes: %d\n",
+                      length(result$errors), length(result$warnings), length(result$notes)))
+          if (length(result$warnings) > 0 || length(result$errors) > 0) {
+            quit(status = 1)
+          }
